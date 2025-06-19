@@ -1,3 +1,4 @@
+
 public class Task020 {
     public static void main(String[] args) {
         // Initialize char array with your name
