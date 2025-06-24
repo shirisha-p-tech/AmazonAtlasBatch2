@@ -1,7 +1,6 @@
 package oops;
 class Calculation {
    int z;
-
    public void addition(int x, int y) {
        z = x + y;
        System.out.println("The sum of the given numbers:"+z);
@@ -13,14 +12,11 @@ class Calculation {
    }
 }
 
-
-
 public class Task031 extends Calculation {
    public void multiplication(int x, int y) {
        z = x * y;
        System.out.println("The product of the given numbers:"+z);
    }
-
    public static void main(String args[]) {
        int a = 20, b = 10;
        Task031 demo = new Task031();
