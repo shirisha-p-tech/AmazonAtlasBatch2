@@ -21,5 +21,4 @@ public class DS_Task010 {
             System.out.println("List after updation of value : "+al);
         }
 
-
 }
