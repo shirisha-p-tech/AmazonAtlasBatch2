@@ -1,4 +1,4 @@
-package ExceptionHandling;
+package exceptionhandling;
 
 public class EH_Task003 {
     public static void main(String[] args) {
