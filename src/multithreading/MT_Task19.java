@@ -13,7 +13,7 @@ class MyThread extends Thread{
         System.out.println("Code executed in new thread via Thread extension");
     }
 }
-public class MT_19 {
+public class MT_Task19 {
     public static void main(String[] args) {
         MyThread t =new MyThread();
         t.start();
