@@ -13,5 +13,4 @@ public class DS_Task009 {
             System.out.println(a);
         }
 
-
 }
