@@ -1,5 +1,6 @@
-import java.lang.FunctionalInterface;
 package iofilehandling;
+import java.lang.FunctionalInterface;
+
 public class LE_Task009 {
     @FunctionalInterface
     interface MyInterface{
