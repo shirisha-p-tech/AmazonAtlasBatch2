@@ -1,3 +1,4 @@
+package oops;
 class Calculation {
    int z;
 
