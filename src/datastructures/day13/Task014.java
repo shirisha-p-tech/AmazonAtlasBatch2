@@ -10,6 +10,7 @@ public class Task014{
         lobj.add("well");
 
         Spliterator<String> sitobj = lobj.spliterator();
+
         //forEachRemaining is a method of Spliterator
         System.out.println("Splitting the list:");
         sitobj.forEachRemaining(System.out::println);
