@@ -1,5 +1,6 @@
 //SinglyLinkedList Creation and Operations
 package datastructures.day13;
+
 // Define a Node class
 class Node {
     int data;  // Data part of the node
