@@ -1,7 +1,6 @@
-package datastructures;
-
+//HashMap Code and printing elements
+package datastructures.day12;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public class Task13 {
         public static void main(String[] args) {
