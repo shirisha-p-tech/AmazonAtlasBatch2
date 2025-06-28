@@ -1,8 +1,9 @@
-package datastructures;
-
+//Adding null key twice and making HashMap synchronized
+package datastructures.day12;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 public class Task16{
 public static void main(String[] args){
     HashMap<String, Integer> hp = new HashMap<>();
@@ -29,8 +30,5 @@ public static void main(String[] args){
         for (Map.Entry<String, Integer> e : syncMap.entrySet())
                 System.out.println(e.getKey() + " " + e.getValue());
         }
-
-
-
 }
 }
