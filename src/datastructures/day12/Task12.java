@@ -1,7 +1,6 @@
-package datastructures;
-import java.sql.SQLOutput;
+//Hashtable code and printing elements
+package datastructures.day12;
 import java.util.Hashtable;
-import java.util.HashMap;
 
 public class Task12 {
     public static void main(String[] args) {
