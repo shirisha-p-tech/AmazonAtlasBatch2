@@ -1,4 +1,5 @@
-package datastructures;
+//Reverse an array
+package datastructures.day12;
 
 public class Task7 {
         public static void main(String[] args) {
