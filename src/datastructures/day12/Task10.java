@@ -1,4 +1,5 @@
-package datastructures;
+//Merging arrays (unsorted)
+package datastructures.day12;
 public class Task10 {
     public static void main (String[] args) {
         int[] arr1 = {11, 55, 105, 75};
