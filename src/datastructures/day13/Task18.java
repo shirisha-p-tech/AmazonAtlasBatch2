@@ -18,7 +18,7 @@ public class Task18 {
         System.out.println("HashMap1: " + hm1);
         System.out.println("HashMap2: " + hm2);
 
-        // Modify hm3 and it does not affect hm2
+        // Modify hm2 and it does not affect hm1
         hm2.put("zzzz",5);
         System.out.println("After modification changing HashMap2 does not effect HashMap1");
         System.out.println("HashMap1: " + hm1);
