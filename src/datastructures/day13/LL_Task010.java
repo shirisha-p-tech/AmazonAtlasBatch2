@@ -13,6 +13,6 @@ public class LL_Task010 {
         ll.add("GHI");
         ll.add("JKL");
 
-        System.out.println("Elements in the LinkedList" + ll);
+        System.out.println("Displaying elements using LinkedList object\n" + ll);
     }
 }
