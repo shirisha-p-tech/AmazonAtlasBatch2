@@ -37,6 +37,21 @@ class CustomLinkedList<T> {
         size++;
     }
 
+    // Function to insert a node at the end
+    void addLast(T data) {
+        Node1<T> newNode = new Node1<>(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node1 temp = head;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newNode;
+        }
+        size++;
+    }
+
     public T removeFirst() {
         if (head == null) {
             throw new NoSuchElementException("List is empty");
@@ -85,20 +100,25 @@ public class LL_Task004 {
         System.out.println("Linked List Elements: ");
         liobj.display();
 
+        liobj.addLast(true);
+        System.out.println("\nAdded boolean element from end");
+        liobj.display();
+
         System.out.println("First Element: " + liobj.get(0));
         System.out.println("Size: " + liobj.size());
 
         liobj.removeFirst();
-        System.out.println("Linked List element after first element removal");
+        System.out.println("\nLinked List elements after first element removal");
         liobj.display();
 
         System.out.println("First Element now is: " + liobj.get(0));
         System.out.println("Size after removal: " + liobj.size());
+        System.out.println("\nAttempting to access index 3: ");
         try {
-            System.out.println("Attempting to access index 3: " + liobj.get(3));
+            System.out.println(liobj.get(3));
         }
         catch(IndexOutOfBoundsException e){
-            System.out.println("Exception caught"+e.getMessage());
+            System.out.println("Exception caught: "+e.getMessage());
         }
 
 
