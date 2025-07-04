@@ -14,6 +14,6 @@ public class LL_Task008 {
 
         System.out.println("Elements in the LinkedList: "+ ll);
         ll.set(0, "ZZZ");
-        System.out.println("Elements in the LinkedList: "+ ll);
+        System.out.println("After setting first element: "+ ll);
 }
 }
