@@ -1,5 +1,9 @@
+// Trees data structures
 // Task 1 to Task 4
-// Trees data structures - node creation, insertion and inorder traversal and main method
+// 1. node creation
+// 2. insertion
+// 3. inorder traversal
+// 4. main method
 package datastructures.day15;
 
 //TreeNode class
