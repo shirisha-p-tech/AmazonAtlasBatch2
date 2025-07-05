@@ -1,7 +1,9 @@
 // Trees data structures - searching operation in BST
 package datastructures.day15;
 
-/*//TreeNode class
+/*
+//Already created TreeNode class in class Task1to4 so commenting out
+TreeNode class
 class TreeNode {
     int data;
     datastructures.day15.TreeNode left;
