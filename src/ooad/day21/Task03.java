@@ -34,7 +34,6 @@ class Sphere implements ICalcShapesArea {
     }
 }
 
-
 public class Task03 {
     public static void main(String[] args) {
         ICalcShapesArea circle = new Circle();
