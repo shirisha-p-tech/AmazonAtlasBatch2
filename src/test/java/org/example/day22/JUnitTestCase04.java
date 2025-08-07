@@ -12,6 +12,7 @@ import org.junit.runner.notification.Failure;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+
 public class JUnitTestCase04 {
 
     private String str;
