@@ -38,6 +38,7 @@ public class JUnitTestCase04 {
         assertEquals("initialise the setup", str);
     }
 
+
     public static void main(String[] args) {
         Result res = JUnitCore.runClasses(JUnitTestCase04.class);
         if (res.getFailureCount() > 0) {
