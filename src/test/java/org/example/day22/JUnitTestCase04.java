@@ -1,7 +1,6 @@
 // @Before and @After annotations usage
 package org.example.day22;
 
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
