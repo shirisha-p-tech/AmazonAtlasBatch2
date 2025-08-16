@@ -10,7 +10,8 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({
         Task05Test01.class,
-        Task05Test02.class
+        Task05Test02.class,
+        Task06Test.class
 })
 public class Task05Runner {
 
