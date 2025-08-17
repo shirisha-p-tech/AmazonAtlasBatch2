@@ -1,6 +1,7 @@
 package designpatterns.creational.day24.abstractfactory;
 
 // Apple Factory
+
 public class Apple {
     public static Mobile getMobile(String model) {
         if (model.equalsIgnoreCase("iphone16")) {
