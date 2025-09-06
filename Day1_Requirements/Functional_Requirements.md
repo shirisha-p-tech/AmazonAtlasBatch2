@@ -1,4 +1,5 @@
-# Functional Requirements
+
+git# Functional Requirements
 
 ## 1. Customer Management
 - The system should allow new customers to register.
