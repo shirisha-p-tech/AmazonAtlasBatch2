@@ -1,0 +1,24 @@
+@startuml
+entity "Customer" as customer {
+  * customerId : UUID
+  * fullName : String
+  * email : String
+  * password : String
+}
+
+entity "Device" as device {
+  * deviceId : UUID
+  * model : String
+  * type : String
+  * room : String
+  * status : Status
+  * customerId : UUID
+}
+
+customer ||..o{ device : "owns"
+
+enum Status {
+ON
+OFF
+}
+@enduml
