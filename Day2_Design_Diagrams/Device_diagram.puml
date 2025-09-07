@@ -1,0 +1,30 @@
+@startuml
+package "Smart Home" {
+    class Customer {
+        -email: String
+        -password: String
+        +fullName: String
+    }
+
+    class Device {
+        +deviceId: String
+        +model: String
+        +status: Status
+        +room: String
+    }
+
+    enum Status {
+    ON
+    OFF
+    }
+
+    class TV extends Device
+    class AC extends Device
+    class Fan extends Device
+    class RoboVacMop extends Device
+
+    Customer "1" -- "many" Device : owns
+    Device --> Status
+
+}
+@enduml
