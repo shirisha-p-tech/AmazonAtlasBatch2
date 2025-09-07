@@ -1,0 +1,32 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "IoT Network" {
+    class Gateway {
+        +connectDevice(device)
+        +disconnectDevice(device)
+    }
+
+    class Device {
+        +deviceId: String
+        +model: String
+        +status: Status
+        +room: String
+    }
+
+    class TV extends Device
+    class AC extends Device
+    class Fan extends Device
+    class RoboVacMop extends Device
+
+    Gateway --> Device : manages
+    Device --> Status
+
+    enum Status{
+    ON
+    OFF
+    }
+
+}
+
+@enduml
