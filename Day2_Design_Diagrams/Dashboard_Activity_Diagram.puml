@@ -1,0 +1,29 @@
+@startuml
+start
+:Display Main Menu;
+if (User chooses Login?) then (yes)
+  :Prompt for credentials;
+  :Authenticate user;
+endif
+
+if (Login success?) then (yes)
+  :Show device options;
+  if (Control Device?) then (yes)
+    :Select device and room;
+    :Send control request;
+    :Update device status;
+  endif
+
+  if (View Devices?) then (yes)
+    :Display device list and statuses;
+  endif
+
+  if (Change Status?) then (yes)
+    :Select device;
+    :Toggle status;
+    :Show success message;
+  endif
+
+endif
+stop
+@enduml
