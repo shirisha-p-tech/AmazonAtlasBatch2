@@ -22,7 +22,6 @@
     OFF
     }
 
-
     Customer "1" -- "many" Device : owns
     Device --> DeviceStatus
 
