@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant Dashboard
+participant Gateway
+participant Device
+
+User -> Dashboard : Request to control device
+Dashboard -> Gateway : Send control signal
+Gateway -> Device : Connect and send signal
+Device -> Gateway : Acknowledge
+Gateway -> Dashboard : Success message
+Dashboard -> User : Show confirmation
+@enduml
