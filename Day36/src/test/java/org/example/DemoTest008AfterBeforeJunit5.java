@@ -1,4 +1,4 @@
-// Task 08 - @AfterEach ,@AfterAll, @BeforeAll, @BeforeEach Annotations
+// Task 08 - other Annotations
 
 package org.example;
 /*
