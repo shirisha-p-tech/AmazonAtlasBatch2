@@ -1,3 +1,4 @@
+// Launcher code
 package org.example;
 
 import org.junit.platform.launcher.*;
