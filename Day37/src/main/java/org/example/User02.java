@@ -3,7 +3,6 @@ package org.example;
 import java.util.Date;
 
 public class User02 {
-
     private String name;
     private Date registrationDate;
 
