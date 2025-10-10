@@ -1,0 +1,140 @@
+@startuml
+title Smart Home System - Customer-Device Class Diagram
+
+' === ENTITY / MODEL CLASSES ===
+class Customer {
+    -customerId: String
+    -fullName: String
+    -email: String
+    -password: String
+    +getCustomerId(): String
+    +getFullName(): String
+    +getEmail(): String
+    +getPassword(): String
+}
+
+class Device {
+    -deviceId: String
+    -customerId: String
+    -model: String
+    -type: String
+    -room: String
+    -status: String
+    +getDeviceId(): String
+    +getCustomerId(): String
+    +getModel(): String
+    +getType(): String
+    +getRoom(): String
+    +getStatus(): String
+    +setStatus(status: String): void
+}
+
+class SensorData {
+
+    -timestamp: String
+    -sensorType: String
+    -value: Double
+    +getTimestamp(): String
+    +getSensorType(): String
+    +getValue(): Double
+}
+
+
+
+
+
+' === REPOSITORY CLASSES ===
+class CustomerRepository {
+    +save(customer: Customer): void
+    +getById(customerId: String): Customer
+    +getByEmail(email: String): Customer
+}
+
+class DeviceRepository {
+    +save(device: Device): void
+    +update(device: Device): void
+    +listByCustomer(customerId: String): List<Device>
+}
+
+class SensorDataRepository {
+    +save(data: SensorData): void
+    +queryRange(deviceId: String, from: String, to: String): List<SensorData>
+    +getLatest(deviceId: String, limit: int): List<SensorData>
+}
+
+
+
+
+
+' === SERVICE CLASSES ===
+
+
+
+
+class CustomerService {
+    -repo: CustomerRepository
+    +registerCustomer(fullName: String, email: String, password: String): boolean
+    +login(email: String, password: String, customer: Customer): boolean
+    +getCustomerByEmail(email: String): Customer
+}
+
+
+
+class DeviceService {
+    -repo: DeviceRepository
+    +registerDevice(customer: Customer, model: String, type: String, room: String): Device
+    +listDevices(customer: Customer): List<Device>
+    +changeDeviceStatus(device: Device): boolean
+}
+
+class SensorService {
+    -repo: SensorDataRepository
+    +addReading(deviceId: String, type: String, value: Double, ttl: Long): void
+    +queryRange(deviceId: String, from: String, to: String): List<SensorData>
+    +getLatest(deviceId: String, n: int): List<SensorData>
+}
+
+
+
+
+' === RELATIONSHIPS ===
+Customer "1" -- "many" Device : owns >
+Device "1" -- "many" SensorData : generates >
+CustomerService --> CustomerRepository
+DeviceService --> DeviceRepository
+SensorService --> SensorDataRepository
+Device --> Customer : belongsTo >
+
+' =============================
+' UI LAYER (Presentation Layer)
+' =============================
+
+
+package "UI Layer" {
+
+class Main {
+    +main(args: String[]): void
+}
+
+    class DeviceMenuHandler {
+        +showDeviceMenu(): void
+        +registerTV(): void
+        +registerAC(): void
+        +registerFAN(): void
+    }
+
+    class SensorMenuHandler {
+        +showSensorMenu(): void
+        +addSensorReading(): void
+        +querySensorRange(): void
+        +getLatestReadings(): void
+
+
+    }
+    Main --> DeviceMenuHandler : opens >
+    Main --> SensorMenuHandler : opens >
+
+
+}
+
+@enduml
