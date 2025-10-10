@@ -1,39 +1,50 @@
 package org.example.smartHome.service;
 
 import org.example.smartHome.model.Customer;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.example.smartHome.repository.CustomerRepository;
 
 /**
- * Handles customer registration, login, and email verification.
+ * Service layer for managing customers.
+ * Provides methods for registration and login.
  */
-
 public class CustomerService {
-    private Map<String, Customer> customersByEmail = new HashMap<>();
+    private final CustomerRepository repo;
 
-    // Registers a new customer with the given details.
+    // Default constructor (used by Main.java)
+    public CustomerService() {
+        this.repo = new CustomerRepository();
+    }
+
+    // Overloaded constructor (used for unit testing with mocks)
+    public CustomerService(CustomerRepository repo) {
+        this.repo = repo;
+    }
+
+    // Gets the Customer email from DynamoDB
+    public Customer getCustomerByEmail(String email){
+        return repo.getByEmail(email);
+    }
+
+    // Registers a new Customer
     public boolean registerCustomer(String fullName, String email, String password) {
-
-        if (customersByEmail.containsKey(email)) {
-            return false;
+        try {
+            // Attempt to save the customer into DynamoDB
+            repo.save(new Customer(fullName, email, password));
+            return true;  // success
+        } catch (Exception e) {
+            // If DynamoDB or repository fails
+            System.out.println("Error saving customer: " + e.getMessage());
+            return false; // failure
         }
-        customersByEmail.put(email, new Customer(fullName, email, password));
-        return true;
     }
 
-    //  Authenticates a customer using email and password.
-    public Customer login(String email, String password) {
-        Customer customer = customersByEmail.get(email);
+    // Login using email + password
+    public boolean login(String email, String password, Customer customer) {
         if (customer != null && customer.getPassword().equals(password)) {
-            return customer;
+            return true;
         }
-        return null;
+        return false;
     }
 
-    // Checks if an email is already registered.
-    public boolean isEmailRegistered(String email) {
-        return customersByEmail.containsKey(email);
-    }
+
 }
-
