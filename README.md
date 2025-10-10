@@ -233,81 +233,85 @@ Key Learnings
 
 
 ## 9. Project Structure
-SmartHomeDashboardProject/
-│
-├── Day1_Requirements/
-│   ├── FunctionalRequirements.md
-│   └── NonFunctionalRequirements.md
-│
-├── Day2_Design_Diagrams/
-│   ├── Customer-Device_Class_Diagram.puml
-│   ├── Dashboard_Activity_Diagram.puml
-│   ├── Gateway_Sequence_Diagram.puml
-│   └── Readme.md
-│
-├── Day3_JavaAPI/
-│   └── Readme.md
-│
-├── Day4_Networking/
-│   └── Readme.md
-│
-├── Day5 & Day6_DynamoDB/
-│   └── Readme.md
-│
-├── Day7_DataStructures/
-│   └── Readme.md
-│
-├── Day8_BDD_Testing/
-│   └── Readme.md
-│
-├── Day9_DevOps/
-│   └── Readme.md
-│
-│
-├── src/
-│   ├── main/java/org/example/smartHome/
-│   │   ├── model/
-│   │   │   ├── Customer.java
-│   │   │   ├── Device.java
-│   │   │   └── SensorData.java
-│   │   │
-│   │   ├── repository/
-│   │   │   ├── CustomerRepository.java
-│   │   │   ├── DeviceRepository.java
-│   │   │   └── SensorDataRepository.java
-│   │   │
-│   │   ├── service/
-│   │   │   ├── CustomerService.java
-│   │   │   ├── DeviceService.java
-│   │   │   └── SensorService.java
-│   │   │
-│   │   ├── network/
-│   │   │   ├── DeviceServer.java
-│   │   │   └── DeviceNetworkClient.java
-│   │   │
-│   │   ├── datastructures/
-│   │   │   ├── Graph.java
-│   │   │   ├── Node.java
-│   │   │   └── GraphBuilderService.java
-│   │   │
-│   │   ├── util/
-│   │   │   └── ValidationUtil.java
-│   │   │
-│   │   ├── ui/
-│   │   │   ├── DeviceMenuHandler.java
-│   │   │   └── SensorMenuHandler.java
-│   │   │
-│   │   └── Main.java
-│   │
-│   └── test/java/org/example/smartHome/service/
-│       ├── CustomerServiceTest.java
-│       ├── DeviceServiceTest.java
-│       └── SensorServiceTest.java
-│
-├── Dockerfile
-├── Jenkinsfile
-├── pom.xml
-└── README.md
+
+    SmartHomeDashboardProject/
+    │
+    ├── Day1_Requirements/
+    │   ├── FunctionalRequirements.md
+    │   └── NonFunctionalRequirements.md
+    │
+    ├── Day2_Design_Diagrams/
+    │   ├── Customer-Device_Class_Diagram.png
+    │   ├── Customer-Device_Class_Diagram.puml
+    │   ├── Gateway_Sequence_Diagram.png
+    │   ├── Gateway_Sequence_Diagram.puml
+    │   ├── Dashboard_Activity_Diagram.png
+    │   ├── Dashboard_Activity_Diagram.puml
+    │   └── Readme.md
+    │
+    ├── Day3_JavaAPI/
+    │   └── Readme.md
+    │
+    ├── Day4_Networking/
+    │   └── Readme.md
+    │
+    ├── Day5 & Day6_DynamoDB/
+    │   └── Readme.md
+    │
+    ├── Day7_DataStructures/
+    │   └── Readme.md
+    │
+    ├── Day8_JUnit_Testing/
+    │   └── Readme.md
+    │
+    ├── Day9_DevOps/
+    │   └── Readme.md
+    │
+    │
+    ├── src/
+    │   ├── main/java/org/example/smartHome/
+    │   │   ├── model/
+    │   │   │   ├── Customer.java
+    │   │   │   ├── Device.java
+    │   │   │   └── SensorData.java
+    │   │   │
+    │   │   ├── repository/
+    │   │   │   ├── CustomerRepository.java
+    │   │   │   ├── DeviceRepository.java
+    │   │   │   └── SensorDataRepository.java
+    │   │   │
+    │   │   ├── service/
+    │   │   │   ├── CustomerService.java
+    │   │   │   ├── DeviceService.java
+    │   │   │   └── SensorService.java
+    │   │   │
+    │   │   ├── network/
+    │   │   │   ├── DeviceServer.java
+    │   │   │   └── DeviceNetworkClient.java
+    │   │   │
+    │   │   ├── datastructures/
+    │   │   │   ├── Graph.java
+    │   │   │   ├── Node.java
+    │   │   │   └── GraphBuilderService.java
+    │   │   │
+    │   │   ├── util/
+    │   │   │   └── ValidationUtil.java
+    │   │   │
+    │   │   ├── ui/
+    │   │   │   ├── DeviceMenuHandler.java
+    │   │   │   └── SensorMenuHandler.java
+    │   │   │
+    │   │   └── Main.java
+    │   │
+    │   └── test/java/org/example/smartHome/service/
+    │       ├── CustomerServiceTest.java
+    │       ├── DeviceServiceTest.java
+    │       └── SensorServiceTest.java
+    │
+    ├── Dockerfile
+    ├── Jenkinsfile
+    ├── pom.xml
+    └── README.md
 
 
 
@@ -320,15 +324,4 @@ SmartHomeDashboardProject/
 
 
 ---
-
-
-
-
-
-
-
-
-
-
-
 
