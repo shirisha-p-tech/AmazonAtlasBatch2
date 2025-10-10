@@ -1,66 +1,69 @@
 package org.example.smartHome.model;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 import java.util.UUID;
 
 /**
  * Represents a smart device in the system.
- * Each device has a unique id, model, type, room location, and an ON/OFF status.
+ * Stored in the DynamoDB "Devices" table with deviceId as the primary key.
+ * A GSI on customerId (customerId-index) is used to query devices by owner.
  */
-
+@DynamoDbBean
 public class Device {
-    private UUID deviceId;
-    private String model;
-    private String type;
-    private String room;
-    private DeviceStatus status;
+    private String deviceId;   // Unique device ID
+    private String customerId; // Owner's customerId (used in GSI)
+    private String model;      // Device model
+    private String type;       // Device type (TV, AC, Fan, etc.)
+    private String room;       // Room location
+    private String status;     // ON or OFF
 
-    // Constructs a Device with specified model, type, and room.
-    public Device(String model, String type, String room) {
-        this.deviceId = UUID.randomUUID(); // Unique identifier
+    // Default constructor required by DynamoDB SDK
+    public Device() {}
+
+    // Constructor to create a new device with generated UUID
+    public Device(String customerId, String model, String type, String room) {
+        this.deviceId = UUID.randomUUID().toString();
+        this.customerId = customerId;
         this.model = model;
         this.type = type;
         this.room = room;
-        this.status = DeviceStatus.OFF; // default status
+        this.status = "OFF"; // initial default status
     }
 
-    // Returns the unique ID of the device.
-    public UUID getDeviceId() {
-        return deviceId;
-    }
+    // Gets the deviceId (Partition Key)
+    @DynamoDbPartitionKey
+    public String getDeviceId() { return deviceId; }
+    public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
 
-    // Returns the model name of the device.
-    public String getModel() {
-        return model;
-    }
+    // Gets the customerId (GSI: customerId-index)
+    @DynamoDbSecondaryPartitionKey(indexNames = {"customerId-index"})
+    public String getCustomerId() { return customerId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
 
-    // Returns the type of the device.
-    public String getType() {
-        return type;
-    }
+    // Gets the model
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
 
-    // Returns the room where the device is installed.
-    public String getRoom() {
-        return room;
-    }
+    // Gets the type
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-    // Returns the current status (ON/OFF) of the device.
-    public DeviceStatus getStatus() {
-        return status;
-    }
+    // Gets the room
+    public String getRoom() { return room; }
+    public void setRoom(String room) { this.room = room; }
 
-    // Sets the current status of the device.
-    public void setStatus(DeviceStatus status) {
-        this.status = status;
-    }
+    // Gets the status
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    // Returns a string representation of the device.
+    // String representation for printing
     @Override
     public String toString() {
-        return  type + " {" +
-                " model='" + model + '\'' +
+        return type + " { " +
+                "status=" + status +
+                ", model='" + model + '\'' +
                 ", room='" + room + '\'' +
-                ", status=" + status +
-                " }";
+                ", deviceID='" + getDeviceId().substring(0,5) +
+                "....' }";
     }
 }
-
