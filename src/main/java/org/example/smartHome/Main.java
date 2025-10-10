@@ -1,23 +1,42 @@
 package org.example.smartHome;
 
+import org.example.smartHome.datastructures.Graph;
+import org.example.smartHome.datastructures.GraphBuilderService;
+import org.example.smartHome.datastructures.Node;
 import org.example.smartHome.model.*;
 import org.example.smartHome.service.*;
 import org.example.smartHome.ui.DeviceMenuHandler;
+import org.example.smartHome.ui.SensorMenuHandler;
 import org.example.smartHome.util.ValidationUtil;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Scanner;
 
 // Driver class
+
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static final CustomerService customerService = new CustomerService();
     private static final DeviceService deviceService = new DeviceService();
+    private static final SensorService sensorService = new SensorService();
     private static Customer currentCustomer = null;
 
 
-    // Driver method
-    public static void main(String[] args)  {
+     // Driver method
+    public static void main(String[] args) {
+
+        // Detect Jenkins or CI environment
+        if (System.getenv("JENKINS_HOME") != null) {
+            System.out.println("🏗️ Running in Jenkins CI environment — skipping interactive menu.");
+            return; // Skip menus to avoid Scanner blocking (no user input available)
+        }
+
+
+        // Application flow
         while (true) {
             if (currentCustomer == null) {
                 showMainMenu();
@@ -28,8 +47,9 @@ public class Main {
     }
 
     // Main menu - register, login and exit
-    private static void showMainMenu()  {
+    private static void showMainMenu() {
         System.out.println("\n=== IoT Smart Home ===");
+        System.out.println("\n=== MainMenu ===");
         System.out.println("1. Signup");
         System.out.println("2. Login");
         System.out.println("3. Exit");
@@ -54,11 +74,11 @@ public class Main {
     }
 
     // Signup
-    private static void signup()  {
+    private static void signup() {
         System.out.print("Full Name: ");
         String name = scanner.nextLine();
         String email;
-        while(true) {
+        while (true) {
             System.out.print("Email: ");
             email = scanner.nextLine();
 
@@ -68,16 +88,18 @@ public class Main {
                 continue;
             }
 
-            // Check if email is already registered
-            if (customerService.isEmailRegistered(email)) {
+
+            currentCustomer = customerService.getCustomerByEmail(email);
+            if(currentCustomer!=null){
                 System.out.println("This email is already registered.");
+                currentCustomer=null;
                 return;
             }
             break;
         }
 
         String pass1;
-        while(true) {
+        while (true) {
             System.out.print("Password: ");
             pass1 = scanner.nextLine();
 
@@ -89,23 +111,29 @@ public class Main {
                 System.out.println("Atleast 1 Lowercase letter");
                 System.out.println("Atleast 1 Digit");
                 System.out.println("Atleast 1 Special character !,@#$%^&*");
-                continue;
+                System.out.println("\nPress 'Y' to retry or 'N' to exit");
+                String ch = scanner.nextLine();
+                if(ch.equalsIgnoreCase("y"))
+                    continue;
+                else {
+                    System.out.println("Sign up failed");
+                    return;
+                }
             }
             break;
         }
         String pass2;
-        int count=0;
-        while(true) {
+        int count = 0;
+        while (true) {
             System.out.print("Confirm Password: ");
             pass2 = scanner.nextLine();
 
             if (!pass1.equals(pass2)) {
                 count++;
-                if(count==1) {
+                if (count == 1) {
                     System.out.println("Passwords do not match. Please try again.");
                     continue;
-                }
-                else {
+                } else {
                     System.out.println("Passwords do not match. Sign up failed");
                 }
             }
@@ -113,7 +141,7 @@ public class Main {
         }
 
         // Register only if passwords match
-        if(pass1.equals(pass2)) {
+        if (pass1.equals(pass2)) {
             boolean success = customerService.registerCustomer(name, email, pass1);
             if (success) {
                 System.out.println("Signed up successfully!");
@@ -123,8 +151,10 @@ public class Main {
         }
     }
 
+
+
     // Login
-    private static void login()  {
+    private static void login() {
         System.out.print("Email: ");
         String email = scanner.nextLine();
 
@@ -134,8 +164,8 @@ public class Main {
             return;
         }
 
-        // Check if email is not registered
-        if (!customerService.isEmailRegistered(email)) {
+        currentCustomer = customerService.getCustomerByEmail(email);
+        if(currentCustomer==null){
             System.out.println("This email is not registered. Please register first.");
             return;
         }
@@ -143,22 +173,25 @@ public class Main {
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        currentCustomer = customerService.login(email, password);
-        if (currentCustomer == null) {
-            System.out.println("Invalid password. Login failed.");
-        } else {
+        boolean result = customerService.login(email, password, currentCustomer);
+        if (result) {
             System.out.println("Logged in successfully! Welcome, " + currentCustomer.getFullName() + "!");
+        } else {
+            System.out.println("Invalid password. Login failed.");
+            currentCustomer=null;
         }
     }
 
     // Dashboard menu
     private static void showDashboardMenu() {
 
-        System.out.println("\n=== Dashboard ===");
+        System.out.println("\n=== Dashboard Menu ===");
         System.out.println("1. Register Device");
         System.out.println("2. View Devices");
         System.out.println("3. Change Device Status");
-        System.out.println("4. Logout");
+        System.out.println("4. Sensor Data");
+        System.out.println("5. View Graph-Network Topology");
+        System.out.println("6. Logout");
         System.out.print("Choose option: ");
         int choice;
 
@@ -172,13 +205,11 @@ public class Main {
 
         switch (choice) {
             case 1 -> registerDevice();
-            case 2 -> deviceService.listDevices(currentCustomer);
-
+            case 2 -> viewDevices();
             case 3 -> changeDeviceStatus();
-            case 4 -> {
-                currentCustomer = null;
-                System.out.println("Logged out.");
-            }
+            case 4 -> openSensorMenu();
+            case 5 -> showNetworkTopology();
+            case 6 -> logout();
             default -> System.out.println("Invalid option.");
         }
     }
@@ -191,50 +222,111 @@ public class Main {
 
     }
 
-    // To change/toggle a device status
+    // Displays all devices for the logged-in customer
+    private static void viewDevices() {
+        var devices = deviceService.listDevices(currentCustomer);
+
+        if (devices.isEmpty()) {
+            System.out.println("No devices registered yet.");
+        } else {
+            System.out.println("\n=== Your Devices ===");
+            for (int i = 0; i < devices.size(); i++) {
+                System.out.println((i + 1) + ". " + devices.get(i));
+            }
+        }
+    }
+
+    // Change/toggle a device status (delegated to DeviceService)
     private static void changeDeviceStatus() {
-        if (currentCustomer.getDevices().isEmpty()) {
+        var devices = deviceService.listDevices(currentCustomer);
+
+        if (devices.isEmpty()) {
             System.out.println("No devices registered yet.");
             return;
         }
 
-        System.out.println("Available devices are:");
-        deviceService.listDevices(currentCustomer);
+        System.out.println("Available devices:");
+        for (int i = 0; i < devices.size(); i++) {
+            System.out.println((i + 1) + ". " + devices.get(i));
+        }
 
-        int deviceIndex = -1;
-
-        // Loop until valid input is received
+        int deviceIndex;
         while (true) {
-
             System.out.print("\nEnter the option to select a device: ");
             try {
                 deviceIndex = Integer.parseInt(scanner.nextLine());
-
-                // Validate range
-                if (deviceIndex < 0 || deviceIndex > currentCustomer.getDevices().size()) {
+                if (deviceIndex <= 0 || deviceIndex > devices.size()) {
                     System.out.println("Invalid option. Please select a valid device index.");
                 } else {
-                    break; // Valid input, exit loop
+                    break;
                 }
-
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
 
-        // Change device status
-        Device device = deviceService.changeDeviceStatus(currentCustomer, deviceIndex);
+        // Pick the selected device from the list
+        Device selectedDevice = devices.get(deviceIndex - 1);
 
-        if (device.getStatus() == DeviceStatus.ON) {
-            System.out.println("\nDevice " + device.getType() + " of " + device.getRoom() + " switched ON successfully");
+        // Delegate actual status toggle logic to DeviceService
+        var success = deviceService.changeDeviceStatus(selectedDevice);
+
+        if (success) {
+            System.out.println("\nDevice " + selectedDevice.getType() + " in " +
+                    selectedDevice.getRoom() + " switched " + selectedDevice.getStatus() + " successfully.");
+
+            System.out.println("\nDevices list after changing status:");
+            for (int i = 0; i < devices.size(); i++) {
+                System.out.println((i + 1) + ". " + devices.get(i));
+            }
         } else {
-            System.out.println("\nDevice " + device.getType() + " of " + device.getRoom() + " switched OFF successfully");
+            System.out.println("Server failed to update device status.");
+        }
+    }
+
+    // opens the sensor menu in SensorMenuHandler class
+    private static void openSensorMenu(){
+
+            if (deviceService.listDevices(currentCustomer).isEmpty()) {
+                System.out.println("No devices registered yet.");
+            } else {
+                SensorMenuHandler sensorMenu = new SensorMenuHandler(sensorService, deviceService, currentCustomer, scanner);
+                sensorMenu.showSensorMenu();
+            }
+
+    }
+
+    // Displays the Smart Home Network Topology using Graphs
+    private static void showNetworkTopology() {
+        GraphBuilderService graphBuilder = new GraphBuilderService(deviceService);
+        Graph graph = graphBuilder.buildNetwork(currentCustomer);
+
+        // Check if only the gateway exists (no connected devices)
+        if (graph.getNodes().size() <= 1) {
+            System.out.println("No devices found in your network.");
+            return;
         }
 
-        System.out.println("\nDevices list after changing status");
-        deviceService.listDevices(currentCustomer);
-    }
-}
 
+        graph.printNetwork();
+
+        // show traversal
+        System.out.println("\nSimulating BFS traversal from Gateway...");
+        String gatewayId = "GW-" + currentCustomer.getCustomerId().substring(0, 5);
+        graph.traverseBFS(new Node(gatewayId, "Gateway"));
+
+
+    }
+
+    // Customer Logout
+    private static void logout(){
+        currentCustomer = null;
+        System.out.println("Logged out.");
+    }
+
+
+
+
+}
 
 
