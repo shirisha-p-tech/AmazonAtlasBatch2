@@ -1,29 +1,85 @@
 @startuml
+title Smart Home System - Dashboard Activity Diagram
+
 start
+
+:Launch Application;
+
 :Display Main Menu;
-if (User chooses Login?) then (yes)
-  :Prompt for credentials;
-  :Authenticate user;
+note right
+=== Main Menu ===
+1. Signup
+2. Login
+3. Exit
+end note
+
+:User selects an option;
+
+if (Signup selected?) then (Yes)
+  :Enter full name, email, password;
+  :Validate input;
+  if (Validation success?) then (Yes)
+    :Register new customer in DynamoDB (Customers table);
+    :Show "Signup successful!";
+    :Return to Main Menu;
+  else (No)
+    :Show "Signup failed or invalid input";
+    :Return to Main Menu;
+  endif
+
+elseif (Login selected?) then (Yes)
+  :Enter email and password;
+  :Validate credentials from DynamoDB;
+  if (Login successful?) then (Yes)
+    :Set current user session;
+    :Display Dashboard Menu;
+    note right
+    === Dashboard ===
+    1. Register Device
+    2. View Devices
+    3. Change Device Status
+    4. Sensor Data Menu
+    5. View Graph-Network Topology
+    6. Logout
+    end note
+
+    :User selects a dashboard option;
+
+    switch (Dashboard choice)
+      case (1. Register Device)
+        :Prompt for model, type, room;
+        :Save to DynamoDB (Devices table);
+        :Show success message;
+        :Return to Dashboard Menu;
+      case (2. View Devices)
+        :Fetch and display devices;
+        :Return to Dashboard Menu;
+      case (3. Change Device Status)
+        :Send command to DeviceServer;
+        :Update DynamoDB;
+        :Show confirmation;
+        :Return to Dashboard Menu;
+      case (4. Sensor Data)
+        :Add / Query sensor readings;
+        :Show results;
+        :Return to Dashboard Menu;
+      case (5. View Graph-Network Topology)
+        :Build graph (GraphBuilderService);
+        :Display topology / BFS traversal;
+        :Return to Dashboard Menu;
+      case (6. Logout)
+        :Clear session;
+        :Return to Main Menu;
+    endswitch
+
+  else (No)
+    :Show "Invalid login credentials";
+    :Return to Main Menu;
+  endif
+
+else (Exit)
+  stop
 endif
 
-if (Login success?) then (yes)
-  :Show device options;
-  if (Control Device?) then (yes)
-    :Select device and room;
-    :Send control request;
-    :Update device status;
-  endif
-
-  if (View Devices?) then (yes)
-    :Display device list and statuses;
-  endif
-
-  if (Change Status?) then (yes)
-    :Select device;
-    :Toggle status;
-    :Show success message;
-  endif
-
-endif
 stop
 @enduml
