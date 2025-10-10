@@ -7,8 +7,9 @@ This folder contains the core design diagrams for the IoT Smart Home Dashboard p
 ### 1. Device Class Diagram
 Type: UML Class Diagram  
 Description:
-Models the main entities of the system including `Customer`, `Device`, and the `DeviceStatus` enum.  
-Shows attributes, methods, and relationships (e.g., a customer owns multiple devices).
+Models the core classes of the system including Model - `Customer`, `Device`, `SensorData`, Service - `CustomerService`, `DeviceService`, `SensorService`
+and Repository -`CustomerRepository`, `DeviceRepository`, `SensorDataRepository` classes.
+Also included other UI Layer classes(DeviceMenuHandler, SensorMenuHandler, Main).
 
 
 ### 2. Gateway Sequence Diagram
@@ -21,5 +22,5 @@ Simulates the socket communication flow for sending commands and receiving ackno
 ### 3. Dashboard Activity Diagram
 Type: UML Activity Diagram  
 Description:  
-Represents the workflow of the dashboard application, including user login, device control, status viewing, and status changes.  
+Represents the workflow of the dashboard application, including user registration, user login, device control, status viewing, and status changes etc. 
 Shows decision points and the flow of activities for a typical user session.
