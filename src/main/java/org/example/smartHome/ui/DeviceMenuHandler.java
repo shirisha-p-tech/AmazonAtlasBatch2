@@ -54,7 +54,7 @@ public class DeviceMenuHandler {
 
     // Registers TV for given model and room options
     private void registerTV() {
-        System.out.print("Enter Model/Name of the TV (Samsung/Sony): ");
+        System.out.print("Enter Model name of the TV (Samsung/Sony): ");
         String model = scanner.nextLine().trim();
         if (!(model.equalsIgnoreCase("Samsung") || (model.equalsIgnoreCase("Sony")))) {
             System.out.println("Invalid TV model. Allowed: Samsung, Sony.");
@@ -65,12 +65,12 @@ public class DeviceMenuHandler {
         if (room == null) return;
 
         Device device = deviceService.registerDevice(customer, model, "TV", room);
-        System.out.println("TV of model "+device.getModel()+" for "+device.getRoom()+ " is registered successfully with Device ID " + device.getDeviceId());
+        System.out.println("'TV' of model '"+device.getModel()+"' for '"+device.getRoom()+ "' is registered successfully with Device ID " + device.getDeviceId());
     }
 
     // Registers AC for given model and room options
     private void registerAC() {
-        System.out.print("Enter Model/Name of the AC (LG/Voltas/Blue Star): ");
+        System.out.print("Enter Model name of the AC (LG/Voltas/Blue Star): ");
         String model = scanner.nextLine().trim();
         if (!model.equalsIgnoreCase("LG")
                 && !model.equalsIgnoreCase("Voltas")
@@ -83,12 +83,12 @@ public class DeviceMenuHandler {
         if (room == null) return;
 
         Device device = deviceService.registerDevice(customer, model, "AC", room);
-        System.out.println("AC of model "+device.getModel()+" for "+device.getRoom()+ " is registered successfully with Device ID " + device.getDeviceId());
+        System.out.println("'AC' of model '"+device.getModel()+"' for '"+device.getRoom()+ "' is registered successfully with Device ID " + device.getDeviceId());
     }
 
     // // Registers Fan for given model and room options
     private void registerFan() {
-        System.out.print("Enter Model/Name of the Fan (Atomberg/Crompton): ");
+        System.out.print("Enter Model name of the Fan (Atomberg/Crompton): ");
         String model = scanner.nextLine().trim();
         if (!model.equalsIgnoreCase("Atomberg") && !model.equalsIgnoreCase("Crompton")) {
             System.out.println("Invalid Fan model. Allowed: Atomberg, Crompton.");
@@ -99,16 +99,16 @@ public class DeviceMenuHandler {
         if (room == null) return;
 
         Device device = deviceService.registerDevice(customer, model, "Fan", room);
-        System.out.println("Fan of model "+device.getModel()+" for "+device.getRoom()+ " is registered successfully with Device ID " + device.getDeviceId());
+        System.out.println("'Fan' of model '"+device.getModel()+"' for '"+device.getRoom()+ "' is registered successfully with Device ID " + device.getDeviceId());
     }
 
     // Registers Robo Vac & Mop for given model and room options
     private void registerRoboVacMop() {
-        System.out.print("Enter Model/Name of the Robo Vac & Mop (Robo Vac & Mop): ");
+        System.out.print("Enter Model name of the Robo Vac & Mop (Robo Vac & Mop/RoboVac&Mop): ");
         String model = scanner.nextLine().trim();
 
-        if (!model.equalsIgnoreCase("Robo Vac & Mop")) {
-            System.out.println("Invalid Robo Vac & Mop model. Allowed: Robo Vac & Mop.");
+        if (!model.equalsIgnoreCase("Robo Vac & Mop")&& !model.equalsIgnoreCase("RoboVac&Mop")) {
+            System.out.println("Invalid Robo Vac & Mop model. Allowed: Robo Vac & Mop (or) RoboVac&Mop");
             return;
         }
 
@@ -116,7 +116,7 @@ public class DeviceMenuHandler {
         if (room == null) return;
 
         Device device = deviceService.registerDevice(customer, model, "RoboVacMop", room);
-        System.out.println("Robo Vac & Mop for "+device.getRoom()+" is registered successfully with Device ID " + device.getDeviceId());
+        System.out.println("'Robo Vac & Mop' for '"+device.getRoom()+"' is registered successfully with Device ID " + device.getDeviceId());
     }
 
     // Asks the user to input a valid room name.
