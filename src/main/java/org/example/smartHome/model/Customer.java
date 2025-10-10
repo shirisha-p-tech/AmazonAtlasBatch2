@@ -1,58 +1,46 @@
 package org.example.smartHome.model;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 import java.util.UUID;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Represents a customer in the Smart Home system.
- * Each customer has a unique ID, personal details, and a list of smart devices.
+ * Stored in the DynamoDB "Customers" table with customerId as the primary key.
+ * A GSI on email (email-index) is used for login queries.
  */
-
+@DynamoDbBean
 public class Customer {
-    private UUID customerId;
-    private String fullName;
-    private String email;
-    private String password;
-    private List<Device> devices;
+    private String customerId;  // Unique customer ID
+    private String fullName;    // Full name of the customer
+    private String email;       // Email address (used for login)
+    private String password;    // Customer password
 
-    // Constructs a new Customer with the given details and initializes an empty device list.
+    // Default constructor required by DynamoDB SDK
+    public Customer() {}
+
+    // Constructor to create a new Customer with generated UUID
     public Customer(String fullName, String email, String password) {
-        this.customerId = UUID.randomUUID();
+        this.customerId = UUID.randomUUID().toString();
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.devices = new ArrayList<>();
     }
 
-    // Returns the unique ID of the customer.
-    public UUID getCustomerId() {
-        return customerId;
-    }
+    // Gets the unique customerId (Partition Key in DynamoDB)
+    @DynamoDbPartitionKey
+    public String getCustomerId() { return customerId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
 
-    // Returns the full name of the customer.
-    public String getFullName() {
-        return fullName;
-    }
+    // Gets the full name
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    // Returns the email of the customer.
-    public String getEmail() {
-        return email;
-    }
+    // Gets the email (Secondary Partition Key for GSI: email-index)
+    @DynamoDbSecondaryPartitionKey(indexNames = {"email-index"})
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    // Returns the password of the customer.
-    public String getPassword() {
-        return password;
-    }
-
-    // Returns the list of devices owned by the customer.
-    public List<Device> getDevices() {
-        return devices;
-    }
-
-    // Adds a new device to the customer's list.
-    public void addDevice(Device device) {
-        devices.add(device);
-    }
+    // Gets the password
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
-
