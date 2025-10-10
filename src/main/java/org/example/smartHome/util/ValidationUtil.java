@@ -9,10 +9,7 @@ public class ValidationUtil {
     // regex for email validation format
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
-    /**
-     * Validates if the given email is in proper format.
-     * Example of valid: user@gmail.com
-     */
+
     // validates the given email format example: user@gmail.com
     public static boolean isValidEmail(String email) {
         return email != null && email.matches(EMAIL_REGEX);
