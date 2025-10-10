@@ -1,4 +1,6 @@
 @startuml
+
+title Smart Home System - Gateway Sequence Diagram
 actor User
 participant Dashboard
 participant Gateway
