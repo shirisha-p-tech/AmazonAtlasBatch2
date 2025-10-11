@@ -12,6 +12,7 @@ pipeline {
         JAR_FILE = 'SmartHomeDashboardProject-1.0-SNAPSHOT.jar'
         MAIN_CLASS = 'org.example.smartHome.Main'
         SERVER_CLASS = 'org.example.smartHome.network.DeviceServer'
+        DEVICE_SERVER_HOST = 'host.docker.internal'
     }
 
     stages {
