@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     tools {
-        // Jenkins tool names (check Manage Jenkins → Global Tool Configuration)
+        // Jenkins tool names
         maven 'Maven3.9.11'
         jdk 'JDK17'
     }
 
     environment {
-        PROJECT_DIR = 'C:\\Users\\pjhan\\ShirishaPrograms\\IdeaProjects\\SmartHomeDashboardProject'  // local path to your IntelliJ project
+        PROJECT_DIR = 'C:\\Users\\pjhan\\ShirishaPrograms\\IdeaProjects\\SmartHomeDashboardProject'
         JAR_FILE = 'SmartHomeDashboardProject-1.0-SNAPSHOT.jar'
         MAIN_CLASS = 'org.example.smartHome.Main'
         SERVER_CLASS = 'org.example.smartHome.network.DeviceServer'
@@ -48,7 +48,7 @@ pipeline {
 
         stage('Check DynamoDB Connection') {
             steps {
-                echo "💾 Checking DynamoDB Local availability..."
+                echo "Checking DynamoDB Local availability..."
                 bat 'curl http://localhost:8000 || echo "DynamoDB not reachable"'
             }
         }
