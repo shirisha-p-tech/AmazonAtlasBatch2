@@ -49,15 +49,15 @@ You also Dockerized the dashboard for portable deployment.
 
 **Stages Executed Automatically in Jenkins:**
 
-| Stage | Description                                       | Status  |
-|-------|---------------------------------------------------|---------|
-| **Checkout from GitHub** | Clones branch `IOTSmartHomeProject`               | Done    |
-| **Build Project** | Compiles and packages the app into a JAR          | Done    |
-| **Run Unit Tests** | Executes all JUnit and Mockito tests              | Done    |
-| **Check DynamoDB Connection** | Verifies if local DynamoDB (port 8000) is running | Done    |
-| **Start DeviceServer** | Launches socket server on port 12345              | Done    |
-| **Run Main App** | Runs the Smart Home Dashboard in Jenkins CI mode  | ✅  Done |
-| **Cleanup** | Stops background processes (DeviceServer)         | Done    |
+| Stage | Description                                       | Status |
+|-------|---------------------------------------------------|-------|
+| **Checkout from GitHub** | Clones branch `IOTSmartHomeProject`               | Done  |
+| **Build Project** | Compiles and packages the app into a JAR          | Done  |
+| **Run Unit Tests** | Executes all JUnit and Mockito tests              | Done  |
+| **Check DynamoDB Connection** | Verifies if local DynamoDB (port 8000) is running | Done  |
+| **Start DeviceServer** | Launches socket server on port 12345              | Done  |
+| **Run Main App** | Runs the Smart Home Dashboard in Jenkins CI mode  |  Done |
+| **Cleanup** | Stops background processes (DeviceServer)         | Done  |
 
 
 
@@ -67,9 +67,8 @@ You also Dockerized the dashboard for portable deployment.
 ## Build Artifact
 After a successful pipeline run:
 
-target/
-│── FirstProjectEditDay5-1.0-SNAPSHOT.jar
-│── original-FirstProjectEditDay5-1.0-SNAPSHOT.jar
+    target/
+        │── SmartHomeDashboardProject-1.0-SNAPSHOT.jar
 
 This JAR is your deployment artifact and can run inside a VM or Docker container.
 
@@ -121,7 +120,7 @@ Archives test reports & logs for reference
 
 Fully automated build + deploy pipeline successfully running in Jenkins and Docker.
 
-
+---
 
 
 
