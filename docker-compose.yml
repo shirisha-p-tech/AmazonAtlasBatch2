@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  deviceserver:
+    image: smart-home-app
+    command: org.example.smartHome.network.DeviceServer
+    ports:
+      - "12345:12345"
+    environment:
+      - IS_DOCKER=true
+      - DYNAMODB_ENDPOINT=http://host.docker.internal:8000
+      - DEVICE_SERVER_HOST=0.0.0.0
+    networks:
+      - smart-home-net
+
+  smarthome-app:
+    image: smart-home-app
+    command: org.example.smartHome.Main
+    depends_on:
+      - deviceserver
+    environment:
+      - IS_DOCKER=true
+      - DYNAMODB_ENDPOINT=http://host.docker.internal:8000
+      - DEVICE_SERVER_HOST=deviceserver
+    networks:
+      - smart-home-net
+    stdin_open: true
+    tty: true
+
+networks:
+  smart-home-net:
+    driver: bridge
