@@ -8,7 +8,8 @@ WORKDIR /app
 COPY target/SmartHomeDashboardProject-1.0-SNAPSHOT.jar app.jar
 
 # Expose ports (DynamoDB Local: 8000, DeviceServer: 12345)
-EXPOSE 12345
+EXPOSE 12345 8000
 
 # Command to run the Smart Home app
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-cp", "app.jar"]
+CMD ["org.example.smartHome.Main"]
