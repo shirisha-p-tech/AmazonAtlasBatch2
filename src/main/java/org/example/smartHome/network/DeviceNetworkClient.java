@@ -5,7 +5,10 @@ import java.net.Socket;
 
 public class DeviceNetworkClient {
 
-    private static final String HOST = "localhost";
+    //private static final String HOST = "localhost";
+    private static final String HOST = System.getenv("DEVICE_SERVER_HOST") != null ?
+            System.getenv("DEVICE_SERVER_HOST") : "localhost";
+
     private static final int PORT = 12345;
 
     // Sends a command to DeviceServer and returns the response
