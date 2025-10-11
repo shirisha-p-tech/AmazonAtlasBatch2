@@ -10,6 +10,10 @@ COPY target/SmartHomeDashboardProject-1.0-SNAPSHOT.jar app.jar
 # Expose ports (DynamoDB Local: 8000, DeviceServer: 12345)
 EXPOSE 12345 8000
 
+# Set environment variables to detect Docker and DynamoDB endpoint
+ENV IS_DOCKER=true
+ENV DYNAMODB_ENDPOINT=http://host.docker.internal:8000
+
 # Command to run the Smart Home app
 ENTRYPOINT ["java", "-cp", "app.jar"]
 CMD ["org.example.smartHome.Main"]
