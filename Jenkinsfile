@@ -71,6 +71,14 @@ pipeline {
                 }
             }
 
+            stage('Run with Docker Compose') {
+                steps {
+                    echo "Starting containers with Docker Compose..."
+                    bat 'docker-compose up -d'
+                }
+            }
+
+
             stage('Run Smart Home App') {
                 steps {
                     echo "Running Smart Home Application..."
