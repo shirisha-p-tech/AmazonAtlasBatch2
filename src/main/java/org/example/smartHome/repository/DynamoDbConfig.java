@@ -14,8 +14,16 @@ public class DynamoDbConfig {
     public static DynamoDbEnhancedClient getEnhancedClient() {
         // Check for environment variable
         String endpoint = System.getenv("DYNAMODB_ENDPOINT");
+
         if (endpoint == null || endpoint.isBlank()) {
-            endpoint = "http://localhost:8000"; // default for IntelliJ
+            // No endpoint explicitly set - decide based on environment
+            // Check if running inside Docker via an environment variable IS_DOCKER (optional)
+            String isDocker = System.getenv("IS_DOCKER");
+            if ("true".equalsIgnoreCase(isDocker)) {
+                endpoint = "http://host.docker.internal:8000";  // inside Docker, talk to host machine
+            } else {
+                endpoint = "http://localhost:8000";  // default for IntelliJ or local run
+            }
         }
 
         System.out.println("🔌 Connecting to DynamoDB at: " + endpoint);
