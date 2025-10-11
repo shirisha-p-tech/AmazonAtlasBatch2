@@ -26,7 +26,6 @@ public class DynamoDbConfig {
             }
         }
 
-        //System.out.println("🔌 Connecting to DynamoDB at: " + endpoint);
 
         DynamoDbClient client = DynamoDbClient.builder()
                 .endpointOverride(URI.create(endpoint))
