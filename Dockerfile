@@ -13,6 +13,7 @@ EXPOSE 12345 8000
 # Set environment variables to detect Docker and DynamoDB endpoint
 ENV IS_DOCKER=true
 ENV DYNAMODB_ENDPOINT=http://host.docker.internal:8000
+ENV DEVICE_SERVER_HOST=host.docker.internal
 
 # Command to run the Smart Home app
 ENTRYPOINT ["java", "-cp", "app.jar"]
