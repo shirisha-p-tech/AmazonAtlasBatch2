@@ -66,7 +66,11 @@ pipeline {
             stage('Run with Docker Compose') {
                 steps {
                     echo "Starting containers with Docker Compose..."
-                    bat 'docker-compose up -d'
+                    //bat 'docker-compose up -d'
+                    bat '''
+                            docker-compose down
+                            docker-compose up -d --build
+                            '''
                 }
             }
 
