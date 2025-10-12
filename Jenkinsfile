@@ -54,15 +54,7 @@ pipeline {
             }
         }
 
-        stage('Start DeviceServer') {
-            steps {
-                echo "Starting DeviceServer in background..."
-                bat '''
-                start "DeviceServer" cmd /c java -cp target\\%JAR_FILE% %SERVER_CLASS%
-                ping 127.0.0.1 -n 5 > nul
-                '''
-            }
-        }
+
 
      stage('Docker Build') {
                 steps {
@@ -89,12 +81,7 @@ pipeline {
         }
 
 
-    post {
-        always {
-            echo "Cleaning up background DeviceServer process..."
-            bat 'taskkill /F /IM java.exe /FI "WINDOWTITLE eq DeviceServer" || exit 0'
-        }
-    }
+
 }
 
 
