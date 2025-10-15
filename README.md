@@ -1,6 +1,11 @@
 # IoT Smart Home Dashboard
+
+---
+
 **Console-Based Project using Java, Maven, DynamoDB, JUnit, Jenkins, and Docker**
+
 **Batch:** Amazon Atlas Batch 2
+
 **Author:** Shirisha Perapagu
 
 
