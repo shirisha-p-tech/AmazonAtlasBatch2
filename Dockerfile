@@ -1,20 +1,27 @@
-# Use an official OpenJDK base image
-FROM openjdk:17-jdk-slim
-
-# Set working directory inside container
+# ---------- Stage 1: Build ----------
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# Copy the JAR built by Maven into the container
-COPY target/SmartHomeDashboardProject-1.0-SNAPSHOT.jar app.jar
+# Copy Maven files first for dependency caching
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# Expose ports (DynamoDB Local: 8000, DeviceServer: 12345)
-EXPOSE 12345 8000
+# Copy the source code and build
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Set environment variables to detect Docker and DynamoDB endpoint
-ENV IS_DOCKER=true
-ENV DYNAMODB_ENDPOINT=http://host.docker.internal:8000
-ENV DEVICE_SERVER_HOST=host.docker.internal
+# ---------- Stage 2: Runtime ----------
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
 
-# Command to run the Smart Home app
-ENTRYPOINT ["java", "-cp", "app.jar"]
-CMD ["org.example.smartHome.Main"]
+# Copy the built JAR from builder stage
+COPY --from=builder /app/target/SmartHomeDashboardProject-1.0-SNAPSHOT.jar app.jar
+
+# Environment variables for DynamoDB Local (NoSQL Workbench)
+ENV DYNAMO_ENDPOINT=http://host.docker.internal:8000
+
+# Expose the DeviceServer port
+EXPOSE 12345
+
+# Default command = Smart Home Dashboard (Main)
+CMD ["java", "-cp", "app.jar", "org.example.smartHome.Main"]
