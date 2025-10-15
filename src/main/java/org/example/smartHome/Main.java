@@ -26,16 +26,10 @@ public class Main {
     private static Customer currentCustomer = null;
 
 
-     // Driver method
+    // Driver method
     public static void main(String[] args) {
 
-        // Detect Jenkins or CI environment
-        if (System.getenv("JENKINS_HOME") != null) {
-            System.out.println("🏗️ Running in Jenkins CI environment — skipping interactive menu.");
-            return; // Skip menus to avoid Scanner blocking (no user input available)
-        }
-
-
+        System.out.println("\n=== IoT Smart Home Application===");
         // Application flow
         while (true) {
             if (currentCustomer == null) {
@@ -48,8 +42,7 @@ public class Main {
 
     // Main menu - register, login and exit
     private static void showMainMenu() {
-        System.out.println("\n=== IoT Smart Home ===");
-        System.out.println("\n=== MainMenu ===");
+        System.out.println("\n==== MainMenu ====");
         System.out.println("1. Signup");
         System.out.println("2. Login");
         System.out.println("3. Exit");
@@ -185,7 +178,7 @@ public class Main {
     // Dashboard menu
     private static void showDashboardMenu() {
 
-        System.out.println("\n=== Dashboard Menu ===");
+        System.out.println("\n\n==== Dashboard Menu ====");
         System.out.println("1. Register Device");
         System.out.println("2. View Devices");
         System.out.println("3. Change Device Status");
@@ -229,7 +222,7 @@ public class Main {
         if (devices.isEmpty()) {
             System.out.println("No devices registered yet.");
         } else {
-            System.out.println("\n=== Your Devices ===");
+            System.out.println("\n=== My Devices ===");
             for (int i = 0; i < devices.size(); i++) {
                 System.out.println((i + 1) + ". " + devices.get(i));
             }
@@ -287,12 +280,12 @@ public class Main {
     // opens the sensor menu in SensorMenuHandler class
     private static void openSensorMenu(){
 
-            if (deviceService.listDevices(currentCustomer).isEmpty()) {
-                System.out.println("No devices registered yet.");
-            } else {
-                SensorMenuHandler sensorMenu = new SensorMenuHandler(sensorService, deviceService, currentCustomer, scanner);
-                sensorMenu.showSensorMenu();
-            }
+        if (deviceService.listDevices(currentCustomer).isEmpty()) {
+            System.out.println("No devices registered yet.");
+        } else {
+            SensorMenuHandler sensorMenu = new SensorMenuHandler(sensorService, deviceService, currentCustomer, scanner);
+            sensorMenu.showSensorMenu();
+        }
 
     }
 
