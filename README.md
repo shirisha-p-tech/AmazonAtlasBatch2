@@ -89,6 +89,8 @@ To implement all system components based on the design architecture.
     - `service` → Business logic (register, login, sensor updates)
     - `network` → Socket communication (DeviceServer & Client)
     - `datastructures` → Graph for network topology
+    - `ui` → Console-based menus (DeviceMenuHandler, SensorMenuHandler) for interactive user experience. 
+    - `util` → Input validation utilities (ValidationUtil) for enforcing proper email and password formats.
 
 
 ### Networking
