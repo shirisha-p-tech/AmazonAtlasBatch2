@@ -8,30 +8,30 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 import java.net.URI;
 
+/**
+ * Configures the DynamoDB client.
+ * Supports both:
+ *  - Local DynamoDB (NoSQL Workbench or Docker)
+ */
 public class DynamoDbConfig {
 
-    // Returns an enhanced DynamoDB client instance
     public static DynamoDbEnhancedClient getEnhancedClient() {
-        // Check for environment variable
-        String endpoint = System.getenv("DYNAMODB_ENDPOINT");
+        // Get endpoint from environment variable if running inside Docker
+        String endpoint = System.getenv("DYNAMO_ENDPOINT");
 
-        if (endpoint == null || endpoint.isBlank()) {
-            // No endpoint explicitly set - decide based on environment
-            // Check if running inside Docker via an environment variable IS_DOCKER (optional)
-            String isDocker = System.getenv("IS_DOCKER");
-            if ("true".equalsIgnoreCase(isDocker)) {
-                endpoint = "http://host.docker.internal:8000";  // inside Docker, talk to host machine
-            } else {
-                endpoint = "http://localhost:8000";  // default for IntelliJ or local run
-            }
+        // Fallback for local IntelliJ or non-container execution
+        if (endpoint == null || endpoint.isEmpty()) {
+            endpoint = "http://localhost:8000";
         }
 
+        System.out.println("[INFO] Connecting to DynamoDB endpoint: " + endpoint);
 
         DynamoDbClient client = DynamoDbClient.builder()
                 .endpointOverride(URI.create(endpoint))
                 .region(Region.US_EAST_1)
                 .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create("dummyKey", "dummySecret")))
+                        AwsBasicCredentials.create("dummyKey", "dummySecret")
+                ))
                 .build();
 
         return DynamoDbEnhancedClient.builder()
