@@ -1,32 +1,28 @@
 version: '3.8'
 
 services:
-  deviceserver:
-    image: smart-home-app
-    command: org.example.smartHome.network.DeviceServer
+  device-server:
+    image: smart-home-dashboard-image:latest
+    container_name: device-server
+    command: ["java", "-cp", "app.jar", "org.example.smartHome.network.DeviceServer"]
     ports:
       - "12345:12345"
-    environment:
-      - IS_DOCKER=true
-      - DYNAMODB_ENDPOINT=http://host.docker.internal:8000
-      - DEVICE_SERVER_HOST=0.0.0.0
     networks:
-      - smart-home-net
+      - iot-net
 
-  smarthome-app:
-    image: smart-home-app
-    command: org.example.smartHome.Main
-    depends_on:
-      - deviceserver
+  smart-home-dashboard:
+    image: smart-home-dashboard-image:latest
+    container_name: smart-home-dashboard
+    command: ["java", "-cp", "app.jar", "org.example.smartHome.Main"]
     environment:
-      - IS_DOCKER=true
-      - DYNAMODB_ENDPOINT=http://host.docker.internal:8000
-      - DEVICE_SERVER_HOST=deviceserver
-    networks:
-      - smart-home-net
+      - DEVICE_SERVER_HOST=device-server
     stdin_open: true
     tty: true
+    depends_on:
+      - device-server
+    networks:
+      - iot-net
 
 networks:
-  smart-home-net:
+  iot-net:
     driver: bridge
