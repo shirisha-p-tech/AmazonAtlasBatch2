@@ -54,11 +54,15 @@ public class SensorDataRepository {
         SdkIterable<Page<SensorData>> results = table.query(QueryEnhancedRequest.builder()
                 .queryConditional(condition)
                 .scanIndexForward(false) // descending order by timestamp
-                .limit(limit)
                 .build());
 
         for (Page<SensorData> page : results) {
             readings.addAll(page.items());
+        }
+
+        // manually limit the size
+        if (readings.size() > limit) {
+            return readings.subList(0, limit);
         }
         return readings;
     }
