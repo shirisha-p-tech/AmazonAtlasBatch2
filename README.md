@@ -158,11 +158,8 @@ Configured a **declarative Jenkinsfile** with the following automated stages:
 | **Checkout** | Pulls the latest code from GitHub (`IOTSmartHomeProject` branch).      |
 | **Build** | Compiles and packages the Java project using Maven.                    |
 | **Test** | Executes all JUnit and Mockito test cases.                             |
-| **Check DynamoDB** | Verifies if the local DynamoDB instance is running (port 8000).        |
-| **Start DeviceServer** | Launches the socket server (port 12345) to simulate IoT communication. |
-| **Run Main App** | Executes the Smart Home Dashboard in non-interactive (CI) mode.        |
-| **Cleanup** | Stops any running background DeviceServer process after execution.     |
-
+| **Build Docker Image** | Creates a Docker image for the app        |
+| **Deploy to Docker Desktop** | Spins up both containers using Docker Compose |
 
 
 
@@ -171,6 +168,17 @@ Configured a **declarative Jenkinsfile** with the following automated stages:
     1. Compile JAR using Maven image
     2. Run lightweight Java image for execution
 - Exposed necessary ports (12345 for DeviceServer).
+
+
+### docker-compose.yml
+
+* Defines **two services**:
+
+    1. `device-server`: backend that listens for device commands
+    2. `smart-home-dashboard`: main console dashboard app
+* Both run on a shared custom Docker network `iot-net`
+* Uses the environment variable `DEVICE_SERVER_HOST=device-server` for inter-container communication
+
  
 
 ---
@@ -179,16 +187,16 @@ Configured a **declarative Jenkinsfile** with the following automated stages:
 ## 6. Technologies Used
 
 
-| Category | Tools / Tech |
-|-----------|--------------|
-| **Language** | Java 17 |
-| **Database** | AWS DynamoDB (Local) |
-| **Build Tool** | Apache Maven |
-| **Testing** | JUnit 5, Mockito |
-| **Automation** | Jenkins Pipeline |
-| **Containerization** | Docker |
-| **IDE** | IntelliJ IDEA |
-| **OS** | Windows 10 |
+| Category | Tools / Tech                         |
+|-----------|--------------------------------------|
+| **Language** | Java 17                              |
+| **Database** | AWS DynamoDB Local (NoSQL Workbench) |
+| **Build Tool** | Apache Maven                         |
+| **Testing** | JUnit 5, Mockito                     |
+| **Automation** | Jenkins Pipeline                     |
+| **Containerization** | Docker Desktop                       |
+| **IDE** | IntelliJ IDEA                        |
+| **OS** | Windows 11                           |
 
 
 ---
@@ -308,6 +316,7 @@ Key Learnings
     │       ├── DeviceServiceTest.java
     │       └── SensorServiceTest.java
     │
+    ├── docker-compose.yml
     ├── Dockerfile
     ├── Jenkinsfile
     ├── pom.xml
