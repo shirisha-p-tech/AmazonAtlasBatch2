@@ -7,6 +7,7 @@ import org.example.smartHome.service.SensorService;
 
 import java.util.List;
 import java.util.Scanner;
+import java.time.Instant;
 
 /**
  * Handles the Sensor Data menu operations in the console.
@@ -110,24 +111,38 @@ public class SensorMenuHandler {
         System.out.println("Sensor reading added successfully.");
     }
 
+
     // Queries readings between two timestamps
     private void querySensorRange() {
         String deviceId = selectDevice();
         if (deviceId == null) return;
 
         System.out.print("Enter start timestamp (ISO, e.g., 2025-10-03T12:00:00Z): ");
-        String from = scanner.nextLine();
+        String from = scanner.nextLine().trim();
 
         System.out.print("Enter end timestamp (ISO, e.g., 2025-10-03T15:00:00Z): ");
-        String to = scanner.nextLine();
+        String to = scanner.nextLine().trim();
 
-        var readings = sensorService.queryRange(deviceId, from, to);
-        if (readings.isEmpty()) {
-            System.out.println("No readings found in the range.");
-        } else {
-            readings.forEach(r ->
-                    System.out.println(r.getTimestamp() + " -> " + r.getSensorType() + " = " + r.getValue())
-            );
+        try {
+            Instant fromTime = Instant.parse(from);
+            Instant toTime = Instant.parse(to);
+
+            if (fromTime.isAfter(toTime)) {
+                System.out.println("Start time must be before end time.");
+                return;
+            }
+
+            var readings = sensorService.queryRange(deviceId, from, to);
+            if (readings.isEmpty()) {
+                System.out.println("No readings found in the range.");
+            } else {
+                readings.forEach(r ->
+                        System.out.println(r.getTimestamp() + " -> " + r.getSensorType() + " = " + r.getValue())
+                );
+            }
+
+        } catch (Exception e) {
+            System.out.println("Invalid timestamp format. Please use ISO format like 2025-10-03T12:00:00Z");
         }
     }
 
