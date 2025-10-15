@@ -2,42 +2,31 @@ pipeline {
     agent any
 
     tools {
-        // Jenkins tool names
         maven 'Maven3.9.11'
         jdk 'JDK17'
     }
 
     environment {
-        PROJECT_DIR = 'C:\\Users\\pjhan\\ShirishaPrograms\\IdeaProjects\\SmartHomeDashboardProject'
-        JAR_FILE = 'SmartHomeDashboardProject-1.0-SNAPSHOT.jar'
-        MAIN_CLASS = 'org.example.smartHome.Main'
-        SERVER_CLASS = 'org.example.smartHome.network.DeviceServer'
-        DEVICE_SERVER_HOST = 'host.docker.internal'
+        DOCKER_IMAGE = 'smart-home-dashboard-image:latest'
     }
 
     stages {
-        stage('Checkout from GitHub') {
+        stage('Checkout') {
             steps {
-                echo "Pulling code from GitHub branch: Demo2dev..."
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/IOTSmartHomeProject']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/shirisha-p-tech/AmazonAtlasBatch2.git'
-                    ]]
-                ])
+                // Replace with your actual GitHub URL and branch
+                git branch: 'IOTSmartHomeProject', url: 'https://github.com/shirisha-p-tech/AmazonAtlasBatch2.git'
             }
         }
 
-        stage('Build Project') {
+        stage('Build with Maven') {
             steps {
-                echo "Building Maven project..."
+                echo 'Packaging fat JAR with dependencies(shaded jar)...'
                 bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                echo "Running unit tests..."
                 bat 'mvn test'
             }
             post {
@@ -47,45 +36,33 @@ pipeline {
             }
         }
 
-        stage('Check DynamoDB Connection') {
+        stage('Build Docker Image') {
             steps {
-                echo "Checking DynamoDB Local availability..."
-                bat 'curl http://localhost:8000 || echo "DynamoDB not reachable"'
+                bat 'docker build -t %DOCKER_IMAGE% .'
             }
         }
 
+        stage('Deploy to Docker Desktop') {
+            steps {
 
-
-     stage('Docker Build') {
-                steps {
-                    echo "Building Docker image for Smart Home app..."
-                    bat 'docker build -t smart-home-app .'
-                }
+                echo 'Cleaning up old containers...'
+                bat 'docker rm -f device-server smart-home-dashboard || exit 0'
+                // Stop old containers (ignore if none)
+                bat 'docker-compose down || exit 0'
+                // Rebuild & start new ones
+                bat 'docker-compose up -d --build'
+                // Show running containers
+                bat 'docker ps'
             }
-
-            stage('Run with Docker Compose') {
-                steps {
-                    echo "Starting containers with Docker Compose..."
-                    //bat 'docker-compose up -d'
-                    bat '''
-                            docker-compose down
-                            docker-compose up -d --build
-                            '''
-                }
-            }
-
-
-            stage('Run Smart Home App') {
-                steps {
-                    echo "Running Smart Home Application..."
-                    bat 'java -cp target\\SmartHomeDashboardProject-1.0-SNAPSHOT.jar org.example.smartHome.Main'
-                }
-            }
-
         }
+    }
 
-
-
+    post {
+        success {
+            echo 'Build, Test, and Docker Deployment Successful!'
+        }
+        failure {
+            echo 'Build or Test Failed — Check Console Output.'
+        }
+    }
 }
-
-
