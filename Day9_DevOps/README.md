@@ -1,68 +1,48 @@
 # Day 9 – DevOps: CI/CD Automation and Dockerization
 
-## Objective
-Implement **DevOps automation** for the Smart Home Java Dashboard using:
-- **Jenkins** for Continuous Integration (CI)
-- **Docker** for containerization
-- **Maven + JUnit** for build and test automation
-- **Local DynamoDB** for persistence
+##  Objective
+
+Dockerize the Smart Home Dashboard and automate the CI/CD pipeline using **Jenkins**, **Maven**, and **Docker Desktop**.
+This step demonstrates full automation — building, testing, packaging, and deploying the project as Docker containers.
 
 ---
 
-## Overview
-This phase integrates **build → test → verify → deploy** into a single automated pipeline.  
-The pipeline:
-1. Pulls code from GitHub
-2. Builds and tests the project using Maven
-3. Checks DynamoDB availability
-4. Starts the `DeviceServer` automatically
-5. Runs the Smart Home Dashboard app
-6. Cleans up resources after execution
+## Tools & Technologies Used
 
-
----
-
-##
-Tools & Technologies
-
-| Tool | Purpose |
-|------|----------|
-| **Jenkins** | Continuous Integration (pipeline orchestration) |
-| **Maven** | Build, dependency management, and testing |
-| **JUnit 5 & Mockito** | Automated unit testing |
-| **Docker** | Packaging app into containers |
-| **DynamoDB Local** | Local NoSQL database for persistence |
-| **GitHub** | Source control and Jenkins integration |
+| Tool                                      | Purpose                                                    |
+| ----------------------------------------- | ---------------------------------------------------------- |
+| **Java 17**                               | Application development language                           |
+| **Maven**                                 | Build tool for packaging & dependency management           |
+| **JUnit 5 + Mockito**                     | Unit testing and mocking framework                         |
+| **AWS SDK v2 (DynamoDB Enhanced Client)** | Database interaction with DynamoDB Local (NoSQL Workbench) |
+| **Docker**                                | Containerization of the application                        |
+| **Docker Compose**                        | Multi-container orchestration (DeviceServer + Dashboard)   |
+| **Jenkins**                               | CI/CD automation for build, test, and deploy pipeline      |
+| **PowerShell**                            | Manual testing of containers and logs                      |
 
 
 ---
 
-## Project Summary
-This phase integrates **continuous integration and deployment** (CI/CD) for your Smart Home application.  
-The Jenkins pipeline automates every step — from **GitHub checkout → Build → Test → Verify DynamoDB → Start Server → Run App → Cleanup**.  
-You also Dockerized the dashboard for portable deployment.
+## Project Structure Overview
 
+The application is composed of **two main modules** that communicate via sockets:
 
----
-
-## Pipeline Summary - `Jenkinsfile`
-
-**Stages Executed Automatically in Jenkins:**
-
-| Stage | Description                                       | Status |
-|-------|---------------------------------------------------|-------|
-| **Checkout from GitHub** | Clones branch `IOTSmartHomeProject`               | Done  |
-| **Build Project** | Compiles and packages the app into a JAR          | Done  |
-| **Run Unit Tests** | Executes all JUnit and Mockito tests              | Done  |
-| **Check DynamoDB Connection** | Verifies if local DynamoDB (port 8000) is running | Done  |
-| **Start DeviceServer** | Launches socket server on port 12345              | Done  |
-| **Run Main App** | Runs the Smart Home Dashboard in Jenkins CI mode  |  Done |
-| **Cleanup** | Stops background processes (DeviceServer)         | Done  |
-
-
+| Module                 | Description                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------ |
+| **DeviceServer**       | Receives device control commands (status ON/OFF) over port **12345**                       |
+| **SmartHomeDashboard** | Main console application for user interaction, device management, and sensor data handling |
 
 ---
 
+## Jenkinsfile – CI/CD Pipeline
+
+1. **Checkout** → Pulls the latest code from GitHub (`IOTSmartHomeProject`)
+2. **Build with Maven** → Compiles and packages the app into a **fat JAR**
+3. **Run Unit Tests** → Executes all JUnit + Mockito test cases
+4. **Build Docker Image** → Creates a Docker image for the app
+5. **Deploy to Docker Desktop** → Spins up both containers using Docker Compose
+
+---
 
 ## Build Artifact
 After a successful pipeline run:
@@ -70,60 +50,81 @@ After a successful pipeline run:
     target/
         │── SmartHomeDashboardProject-1.0-SNAPSHOT.jar
 
-This JAR is your deployment artifact and can run inside a VM or Docker container.
+This fat JAR is your deployment artifact and can run inside a VM or Docker container.
+
 
 ---
 
-## Dockerization - `Dockerfile`
-
-A multi-stage Docker build was implemented:
-- Stage 1 → Maven builds and packages the JAR
-- Stage 2 → Lightweight runtime container runs the app
-- Exposes port **12345**
-
----
+## Dockerfile (Multi-Stage Build)
 
 
-## Pipeline ResultsNon-Interactive Mode for CI
-
-In Main.java, interactive menus are skipped inside Jenkins or Docker:
-if (System.getenv("JENKINS_HOME") != null) {
-System.out.println("Running in Jenkins CI environment — skipping interactive menu.");
-return;
-}
-
-This prevents the pipeline from blocking for keyboard input.
+* Stage 1: Uses Maven image to **build and package** the project
+* Stage 2: Uses a smaller runtime image (JDK only) to **run the app**
+* Reduces final image size & improves build performance
+* Exposes **port 12345** for the DeviceServer
 
 ---
 
-## Pipeline Results
+## docker-compose.yml
 
-- End-to-end Jenkins automation verified
-- All unit tests passed
-- Docker image builds successfully
-- DynamoDB health check integrated
-- DeviceServer auto-starts and cleans up
+* Defines **two services**:
 
----
-
-## Post Actions
-
-After each pipeline run Jenkins automatically:
-Terminates DeviceServer processes (java.exe)
-Archives test reports & logs for reference
+    * `device-server`: backend that listens for device commands
+    * `smart-home-dashboard`: main console dashboard app
+* Both run on a shared custom Docker network `iot-net`
+* Uses the environment variable `DEVICE_SERVER_HOST=device-server` for inter-container communication
 
 ---
 
+## Steps to Run
 
+### Option 1: Run via Jenkins
+
+1. Open Jenkins
+2. Build the pipeline (this runs all Maven + Docker steps)
+3. View results under console output
+4. Verify containers:
+
+   ```powershell
+   docker ps
+   ```
+
+---
+
+### Option 2: Run manually via PowerShell
+
+1. Create a Docker network manually:
+
+   ```powershell
+   docker network create iot-net
+   ```
+2. Start the `DeviceServer`:
+
+   ```powershell
+   docker run --rm --name device-server --network iot-net smart-home-dashboard-image:latest java -cp app.jar org.example.smartHome.network.DeviceServer
+   ```
+3. In another terminal, start the main app:
+
+   ```powershell
+   docker run -it --rm --name smart-home-dashboard --network iot-net -e DEVICE_SERVER_HOST=device-server smart-home-dashboard-image:latest java -cp app.jar org.example.smartHome.Main
+   ```
+
+---
+
+## Key Learnings
+
+* Automated CI/CD pipeline with **Jenkins + Docker**
+* Created lightweight **multi-stage Docker build**
+* Used **Docker Compose** for service orchestration
+* Integrated **DynamoDB Local** via NoSQL Workbench
+* Verified end-to-end interaction between containers in PowerShell
+
+---
 
 ## Deliverable
 
-Fully automated build + deploy pipeline successfully running in Jenkins and Docker.
+Fully automated built + tested + deploy pipeline successfully running in Jenkins and Docker.
+
 
 ---
-
-
-
-
-
 
