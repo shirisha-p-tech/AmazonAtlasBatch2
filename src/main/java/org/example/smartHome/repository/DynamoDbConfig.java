@@ -24,7 +24,7 @@ public class DynamoDbConfig {
             endpoint = "http://localhost:8000";
         }
 
-        System.out.println("[INFO] Connecting to DynamoDB endpoint: " + endpoint);
+        //System.out.println("[INFO] Connecting to DynamoDB endpoint: " + endpoint);
 
         DynamoDbClient client = DynamoDbClient.builder()
                 .endpointOverride(URI.create(endpoint))
